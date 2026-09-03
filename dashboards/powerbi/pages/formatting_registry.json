@@ -1,0 +1,37 @@
+{
+  "version": "phase5-step2",
+  "tooltip_policy": {
+    "revenue": "Tooltip shows: measure value, weight (units), units, weighted price, provenance (derived)",
+    "scenario": "Tooltip shows: measure value, scenario run name, provenance (simulated)",
+    "risk": "Tooltip shows: risk score, risk tier, risk rank, top contributing components (from risk_components jsonb text)",
+    "forecast": "Tooltip shows: forecast_value, lower_bound, upper_bound, model_name, provenance (derived)"
+  },
+  "conditional_formatting": {
+    "risk_tier": {
+      "rule_field": "risk_tier",
+      "rules": {
+        "Critical": "dark red fill / white font (P1.8)",
+        "High": "red-orange fill (P1.8)",
+        "Medium": "amber fill (P1.8)",
+        "Low": "green/green-ok fill (P1.8)"
+      }
+    },
+    "delta": {
+      "rule": "scenario delta vs baseline",
+      "positive_bad": "excess days / stockout units increase = red up-arrow (worse)",
+      "positive_good": "service level / fill rate increase = green up-arrow (better)",
+      "undefined": "render '- ' (dash)"
+    },
+    "growth": {
+      "rule": "WoW/QoQ/YoY pct sign and magnitude",
+      "positive": "green arrow up",
+      "negative": "red arrow down",
+      "undefined": "dash '-'"
+    },
+    "score_scale": {
+      "risk_score": "colour ramp 0..1 (green->amber->red) for rank visuals"
+    }
+  },
+  "undefined_state": "All numeric measures that resolve to BLANK() render the literal '-' via the 'Display Dash' measure. No fabricated 0.",
+  "empty_table_state": "When a visual's filter context returns zero rows, show an explicit 'no data for selection' message; never an automatic zero."
+}

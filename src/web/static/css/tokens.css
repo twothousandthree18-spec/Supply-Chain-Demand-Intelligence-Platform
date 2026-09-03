@@ -1,0 +1,78 @@
+/* ============================================================
+   Supply Chain & Demand Intelligence Platform — Phase 6
+   Locked Design Tokens — single source of truth (5-color palette)
+   Mandated by the Phase 6 brief + docs/design_system.md.
+   DO NOT add off-palette colors.
+   ============================================================ */
+
+:root {
+  /* --- Brand palette (locked) --- */
+  --color-obsidian:      #090B0A; /* primary dark surface / background          */
+  --color-deep-jade:     #123C35; /* secondary dark surface / panels / bands    */
+  --color-electric-jade: #19E6B1; /* positive / active / highlight / accent     */
+  --color-champagne:     #D8C39B; /* secondary emphasis / warning / attention   */
+  --color-soft-white:    #EDEFEA; /* primary readable text / light background   */
+
+  /* --- Derived semantic states (documented aliases, from the palette family) --- */
+  --color-danger:        #C25A3A; /* derived red-orange, danger states only     */
+  --color-danger-muted:  #8F3D2B; /* darker variant for critical tier fills     */
+
+  /* --- Typography --- */
+  --font-display: "Segoe UI", "SF Pro Display", system-ui, sans-serif;
+  --font-body:    "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+  --font-mono:    "Consolas", "Menlo", monospace;
+
+  --text-h1: clamp(1.7rem, 3vw, 2.3rem);
+  --text-h2: clamp(1.3rem, 2vw, 1.7rem);
+  --text-h3: 1.1rem;
+  --text-h4: 1rem;
+  --text-body: 0.95rem;
+  --text-data: 0.95rem;     /* KPI / table digits (numeric) */
+  --text-caption: 0.78rem;
+  --text-chip: 0.72rem;
+
+  /* --- Spacing (4px base grid) --- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-8: 3rem;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* --- Surfaces --- */
+  --bg-app:        var(--color-obsidian);
+  --bg-surface:    var(--color-deep-jade);
+  --bg-surface-2:  var(--color-obsidian);
+  --bg-panel:      #101513;   /* subtle panel on obsidian (derived) */
+  --bg-light:      var(--color-soft-white);
+
+  --text-primary:    var(--color-soft-white);
+  --text-secondary:  #B8BFB6;  /* muted readable text on obsidian (derived grey, documented) */
+  --text-on-light:   var(--color-obsidian);
+  --text-muted-light:#55605A;
+
+  --border:          #1F2A26;
+  --border-strong:   var(--color-deep-jade);
+
+  --accent:          var(--color-electric-jade);
+  --accent-2:        var(--color-champagne);
+
+  /* --- Provenance / state accents --- */
+  --prov-observed:   var(--color-soft-white);
+  --prov-derived:    var(--color-electric-jade);
+  --prov-simulated:  var(--color-champagne);
+
+  --tier-critical:   var(--color-danger-muted);
+  --tier-high:       var(--color-danger);
+  --tier-medium:     var(--color-champagne);
+  --tier-low:        var(--color-electric-jade);
+
+  /* --- Shadow --- */
+  --shadow-1: 0 1px 2px rgba(0,0,0,0.35);
+  --shadow-2: 0 4px 14px rgba(0,0,0,0.4);
+}

@@ -1,0 +1,43 @@
+# Supply Chain & Demand Intelligence Platform
+# Reproducible self-hosted stack: PostgreSQL (storage) + web/API service.
+#
+# Usage:
+#   docker compose up --build
+#   open http://localhost:8000   (health: http://localhost:8000/healthz)
+#
+# The app container is initialized empty — point it at an existing warehouse by
+# restoring a logical/psql dump of the supply_chain_intelligence database, or run
+# the Phase 2 ETL inside the postgres container before browsing. See DEPLOYMENT.md.
+
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: supply_chain_intelligence
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${PGPASSWORD:-change_me_in_compose_env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PGHOST: db
+      PGPORT: "5432"
+      PGDATABASE: supply_chain_intelligence
+      PGUSER: postgres
+      PGPASSWORD: ${PGPASSWORD:-change_me_in_compose_env}
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+volumes:
+  pgdata:

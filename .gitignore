@@ -1,0 +1,65 @@
+# ============================================================
+# Supply Chain & Demand Intelligence Platform - .gitignore
+# Phase 0 - Project foundations
+# ============================================================
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# ---- Data (raw datasets are large; never commit) ----
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/curated/*
+!data/curated/.gitkeep
+data/external/*
+!data/external/.gitkeep
+
+# ---- SQL ----
+*.log
+
+# ---- Runtime / process artefacts ----
+*.pid
+reports/etl/*.err
+
+# ---- Environment / secrets ----
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# ---- Node / web ----
+node_modules/
+dist/
+build/
+.next/
+coverage/
+
+# ---- Playwright / browser-MCP transient snapshots ----
+.playwright-mcp/
+playwright-report/
+test-results/
+
+# ---- OS / editor ----
+Thumbs.db
+Desktop.ini
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# ---- Artifacts (generated outputs are produced in later phases) ----
+artifacts/models/*
+!artifacts/models/.gitkeep
+artifacts/forecasts/*
+!artifacts/forecasts/.gitkeep

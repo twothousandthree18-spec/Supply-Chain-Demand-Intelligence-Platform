@@ -1,0 +1,39 @@
+{
+  "version": "phase5-step2",
+  "global_filters": {
+    "period": {
+      "source": "DimWeek",
+      "fields": ["wm_yr_wk", "week_id", "year", "quarter", "month"],
+      "type": "relative-date-slicer",
+      "grain": "week",
+      "default": "all"
+    },
+    "date": {
+      "source": "DimDate",
+      "fields": ["date_id", "calendar_date", "is_observed"],
+      "type": "date-slicer",
+      "grain": "day",
+      "note": "Applied only to day-grain facts (FactForecast, FactInventorySimulation, FactDemandSeasonality). Auto-bounded to 28-day horizon for forecast/inventory."
+    },
+    "department": { "source": "DimDepartment", "fields": ["dept_surr_id", "dept_name"] },
+    "category": { "source": "DimCategory", "fields": ["category_surr_id", "category_name"] },
+    "product": { "source": "DimProduct", "fields": ["product_surr_id", "product_id", "product_label"] },
+    "store": { "source": "DimStore", "fields": ["store_surr_id", "store_id", "store_name"] },
+    "state": { "source": "DimStore", "fields": ["state_id", "region_id"], "note": "attributes in DimStore" },
+    "provenance": { "source": "fact data_provenance", "type": "slicer", "note": "render label; do not filter out simulated/derived—flag instead" }
+  },
+  "page_filters": {
+    "P1": ["period", "department", "category", "store", "state", "product", "top_n"],
+    "P2": ["department", "category", "store", "state", "segment", "dow_scope"],
+    "P3": ["model", "is_selected", "department", "category", "store"],
+    "P4": ["assumption_set", "date", "department", "category", "store", "risk_tier"],
+    "P5": ["risk_type", "risk_tier", "top_n", "department", "category", "store", "state"],
+    "P6": ["scenario", "delta_metric", "department", "category", "store"],
+    "P7": ["risk_tier", "department", "category", "store", "risk_score_threshold", "sort_key", "top_n"]
+  },
+  "top_n": {
+    "source": "DimProduct",
+    "behavior": "Top-N by measure value desc; ties broken by product_surr_id asc",
+    "default_N": 10
+  }
+}

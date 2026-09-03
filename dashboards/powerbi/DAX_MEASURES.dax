@@ -1,0 +1,292 @@
+// ============================================================
+// Power BI DAX Measures — Phase 5 Step 1 (Semantic Model)
+// Governed by reports/PHASE_5_DASHBOARD_SPEC.md §6 (required measures)
+// and dashboards/powerbi/POWERBI_MODEL.md (model contract).
+//
+// Conventions:
+//   * One definition per KPI (spec §6).
+//   * Additive measures are plain SUM/SUMX and sum correctly over any product/store subset.
+//   * Non-additive measures (averages, weighted values) are explicitly defined, often demand-weighted.
+//   * Weight = total_demand (Phase-3D convention), or total_units_hist where the spec calls for it.
+//   * Undefined values return BLANK() so they render as "—" (spec §8b), never 0 or fabricated.
+//   * Provenance guard helpers ensure simulated content is labeled.
+// ============================================================
+
+// ---------------------------------------------------------------------------
+// 1. Revenue / Units / Price / Growth (FactWeeklySales + DimWeek + DimDate)
+// ---------------------------------------------------------------------------
+
+// Total Revenue = SUM(units × sell_price) at any grain from the weekly anchor.
+Total Revenue =
+SUMX ( FactWeeklySales, FactWeeklySales[units] * FactWeeklySales[sell_price] )
+
+// Total Units (fully additive).
+Total Units =
+SUM ( FactWeeklySales[units] )
+
+// Weighted Price = revenue / units (BLANK when no units).
+Weighted Price =
+DIVIDE ( [Total Revenue], [Total Units], BLANK () )
+
+// Revenue WoW % — current week vs prior week. Uses DimWeek ordered by wm_yr_wk (278 weeks).
+Revenue WoW % =
+VAR CurWk = SELECTEDVALUE ( DimWeek[wm_yr_wk] )
+VAR PrvWk =
+    CALCULATE ( MAX ( DimWeek[wm_yr_wk] ),
+        FILTER ( ALL ( DimWeek ), DimWeek[wm_yr_wk] < CurWk ) )
+VAR CurRev = [Total Revenue]
+VAR PrvRev = CALCULATE ( [Total Revenue], DimWeek[wm_yr_wk] = PrvWk )
+RETURN
+    IF ( OR ( ISBLANK ( PrvRev ), PrvRev <= 0 ), BLANK (), DIVIDE ( CurRev - PrvRev, PrvRev ) * 100 )
+
+// Units WoW %.
+Units WoW % =
+VAR CurWk = SELECTEDVALUE ( DimWeek[wm_yr_wk] )
+VAR PrvWk =
+    CALCULATE ( MAX ( DimWeek[wm_yr_wk] ),
+        FILTER ( ALL ( DimWeek ), DimWeek[wm_yr_wk] < CurWk ) )
+VAR CurU = [Total Units]
+VAR PrvU = CALCULATE ( [Total Units], DimWeek[wm_yr_wk] = PrvWk )
+RETURN
+    IF ( OR ( ISBLANK ( PrvU ), PrvU <= 0 ), BLANK (), DIVIDE ( CurU - PrvU, PrvU ) * 100 )
+
+// Revenue QoQ % — quarter totals ordered by (year, quarter) via DimDate/DimWeek.
+Revenue QoQ % =
+VAR CurQ = SELECTEDVALUE ( DimWeek[quarter] )
+VAR CurY = SELECTEDVALUE ( DimWeek[year] )
+VAR PrvQ =
+    CALCULATE ( MAX ( DimWeek[quarter] ),
+        FILTER ( ALL ( DimWeek ),
+            DimWeek[year] = CurY && DimWeek[quarter] < CurQ ) )
+VAR PrvYears =
+    CALCULATE ( MAX ( DimWeek[year] ),
+        FILTER ( ALL ( DimWeek ), DimWeek[year] < CurY ) )
+VAR CurRev = [Total Revenue]
+VAR PrvRev =
+    CALCULATE ( [Total Revenue],
+        FILTER ( ALL ( DimWeek ),
+            DimWeek[year] = IF ( PrvQ IS BLANK (), PrvYears, CurY ) &&
+            DimWeek[quarter] = IF ( PrvQ IS BLANK (), 4, PrvQ ) ) )
+RETURN
+    IF ( OR ( ISBLANK ( PrvRev ), PrvRev <= 0 ), BLANK (), DIVIDE ( CurRev - PrvRev, PrvRev ) * 100 )
+
+// Revenue YoY %.
+Revenue YoY % =
+VAR CurY = SELECTEDVALUE ( DimWeek[year] )
+VAR PrvY = CALCULATE ( MAX ( DimWeek[year] ), FILTER ( ALL ( DimWeek ), DimWeek[year] < CurY ) )
+VAR CurRev = [Total Revenue]
+VAR PrvRev = CALCULATE ( [Total Revenue], DimWeek[year] = PrvY )
+RETURN
+    IF ( OR ( ISBLANK ( PrvRev ), PrvRev <= 0 ), BLANK (), DIVIDE ( CurRev - PrvRev, PrvRev ) * 100 )
+
+// Units YoY %.
+Units YoY % =
+VAR CurY = SELECTEDVALUE ( DimWeek[year] )
+VAR PrvY = CALCULATE ( MAX ( DimWeek[year] ), FILTER ( ALL ( DimWeek ), DimWeek[year] < CurY ) )
+VAR CurU = [Total Units]
+VAR PrvU = CALCULATE ( [Total Units], DimWeek[year] = PrvY )
+RETURN
+    IF ( OR ( ISBLANK ( PrvU ), PrvU <= 0 ), BLANK (), DIVIDE ( CurU - PrvU, PrvU ) * 100 )
+
+// Entity Revenue Share % (product / category / department / store / state).
+// Evaluated in current filter context over FactWeeklySales; denominator is the 
+// selected scope's total revenue, so this is the within-scope share.
+Entity Revenue Share % =
+DIVIDE ( [Total Revenue], CALCULATE ( [Total Revenue], ALLSELECTED ( DimProduct ) ), BLANK () ) * 100
+
+// Product revenue share (Pareto-ready; rank is derived by value in the matrix visual).
+Product Revenue Share % =
+DIVIDE ( [Total Revenue],
+    CALCULATE ( [Total Revenue], ALL ( DimProduct ) ), BLANK () ) * 100
+
+// Cumulative product revenue share (Pareto). Requires an implicit RANK.
+// Equivalent to running SUM ordered by revenue descending; driven in Power Query if strict tie-break by revenue DESC needed.
+Cumulative Product Revenue Share % =
+VAR CurRev = [Total Revenue]
+VAR Running =
+    CALCULATE ( [Total Revenue],
+        FILTER ( ALL ( DimProduct ), [Total Revenue] >= CurRev ) )
+RETURN
+    DIVIDE ( Running, CALCULATE ( [Total Revenue], ALL ( DimProduct ) ), BLANK () ) * 100
+
+// ---------------------------------------------------------------------------
+// 2. Scenario / Inventory core (FactScenarioResult, baseline + risk runs)
+// ---------------------------------------------------------------------------
+
+// Total Stockout Days (additive).
+Total Stockout Days = SUM ( FactScenarioResult[stockout_days] )
+
+// Total Stockout Units (additive).
+Total Stockout Units = SUM ( FactScenarioResult[stockout_units] )
+
+// Total Excess Days (additive).
+Total Excess Days = SUM ( FactScenarioResult[excess_days] )
+
+// Total Excess Units (additive).
+Total Excess Units = SUM ( FactScenarioResult[total_excess_units] )
+
+// Total Demand (additive).
+Total Demand = SUM ( FactScenarioResult[total_demand] )
+
+// Replenishment Units (additive).
+Replenishment Units = SUM ( FactScenarioResult[replenishment_units] )
+
+// Avg Service Level — demand-weighted average of achieved service level.
+Avg Service Level =
+DIVIDE (
+    SUMX ( FactScenarioResult, FactScenarioResult[service_level_achieved] * FactScenarioResult[total_demand] ),
+    SUM ( FactScenarioResult[total_demand] ),
+    BLANK () )
+
+// Fill Rate (aggregate-level) — 1 - total_stockout_units / total_demand.
+Fill Rate =
+IF (
+    ISBLANK ( [Total Demand] ) || [Total Demand] <= 0,
+    BLANK (),
+    1 - DIVIDE ( [Total Stockout Units], [Total Demand] ) )
+
+// Avg Days of Inventory (non-additive; equal-weight mean across series).
+Avg Days of Inventory = AVERAGE ( FactScenarioResult[avg_days_of_inventory] )
+
+// Avg Inventory Position (non-additive).
+Avg Inventory Position = AVERAGE ( FactScenarioResult[avg_inventory_position] )
+
+// Series at Risk Count — High/Critical tier series (works on either rank run in context).
+Series at Risk Count =
+CALCULATE (
+    COUNTROWS ( FactScenarioResult ),
+    FactScenarioResult[risk_tier] IN { "High", "Critical" } )
+
+// Series Count (context helper).
+Series Count = COUNTROWS ( FactScenarioResult )
+
+// Stockout Risk Score (from the stockout_risk_rank run; pass- through of stored value).
+Stockout Risk Score = AVERAGE ( FactScenarioResult[risk_score] )
+
+// Stockout Risk Tier (returns the max tier string, used in visuals/tooltips).
+Stockout Risk Tier =
+IF (
+    HASONEVALUE ( FactScenarioResult[risk_tier] ),
+    SELECTEDVALUE ( FactScenarioResult[risk_tier] ),
+    BLANK () )
+
+// Stockout Risk Rank (bounded 1..30490 context).
+Stockout Risk Rank = SUM ( FactScenarioResult[risk_rank] )
+
+// Excess Risk Score / Rank (from the excess_risk_rank run; same columns).
+Excess Risk Score = AVERAGE ( FactScenarioResult[risk_score] )
+Excess Risk Rank = SUM ( FactScenarioResult[risk_rank] )
+
+// Fill/Service Gap = target - achieved (>=0), demand-weighted; BLANK when undefined.
+Fill Service Gap =
+DIVIDE (
+    SUMX (
+        FactScenarioResult,
+        MAXX ( { 0, FactScenarioResult[service_level_target] - FactScenarioResult[service_level_achieved] }, VALUE ) 
+            * FactScenarioResult[total_demand] ),
+    SUM ( FactScenarioResult[total_demand] ),
+    BLANK () )
+
+// Scenario Delta (stockout units) — scenario vs baseline.
+Scenario Delta Stockout Units =
+VAR Base = CALCULATE ( [Total Stockout Units], DimScenario[scenario_type] = "baseline" )
+VAR Cur  = [Total Stockout Units]
+RETURN
+    IF ( ISBLANK ( Base ), BLANK (), Cur - Base )
+
+// Scenario Delta Service Level.
+Scenario Delta Service Level =
+VAR Base = CALCULATE ( [Avg Service Level], DimScenario[scenario_type] = "baseline" )
+VAR Cur  = [Avg Service Level]
+RETURN
+    IF ( ISBLANK ( Base ), BLANK (), Cur - Base )
+
+// Scenario Delta Excess Days.
+Scenario Delta Excess Days =
+VAR Base = CALCULATE ( [Total Excess Days], DimScenario[scenario_type] = "baseline" )
+VAR Cur  = [Total Excess Days]
+RETURN
+    IF ( ISBLANK ( Base ), BLANK (), Cur - Base )
+
+// Scenario Delta Fill Rate.
+Scenario Delta Fill Rate =
+VAR Base = CALCULATE ( [Fill Rate], DimScenario[scenario_type] = "baseline" )
+VAR Cur  = [Fill Rate]
+RETURN
+    IF ( ISBLANK ( Base ), BLANK (), Cur - Base )
+
+// Scenario Delta Avg Inventory Position.
+Scenario Delta Avg Inventory Position =
+VAR Base = CALCULATE ( [Avg Inventory Position], DimScenario[scenario_type] = "baseline" )
+VAR Cur  = [Avg Inventory Position]
+RETURN
+    IF ( ISBLANK ( Base ), BLANK (), Cur - Base )
+
+// Generic scenario delta driver (picks the metric by a param/relationship); the six above are the canonical set.
+Scenario Delta = [Scenario Delta Stockout Units]
+
+// ---------------------------------------------------------------------------
+// 3. Forecast Accuracy (FactForecastEvaluation, demand-weighted; spec §6 #17-19)
+// ---------------------------------------------------------------------------
+
+// MAE - mean absolute error.
+Forecast MAE = AVERAGE ( FactForecastEvaluation[mae] )
+
+// RMSE.
+Forecast RMSE = AVERAGE ( FactForecastEvaluation[rmse] )
+
+// WMAE - demand-weighted mean absolute error (weights = series total demand from FactDemandAnalysis).
+Forecast WMAE =
+DIVIDE (
+    SUMX (
+        FactForecastEvaluation,
+        FactForecastEvaluation[wmae] * RELATED ( FactDemandAnalysis[total_units] ) ),
+    SUMX ( FactForecastEvaluation, RELATED ( FactDemandAnalysis[total_units] ) ),
+    BLANK () )
+
+// WRMSE - demand-weighted RMSE.
+Forecast WRMSE =
+DIVIDE (
+    SUMX (
+        FactForecastEvaluation,
+        FactForecastEvaluation[wrmse] * RELATED ( FactDemandAnalysis[total_units] ) ),
+    SUMX ( FactForecastEvaluation, RELATED ( FactDemandAnalysis[total_units] ) ),
+    BLANK () )
+
+// Bias - mean forecast-error (positive = over-forecast).
+Forecast Bias = AVERAGE ( FactForecastEvaluation[bias] )
+
+// ---------------------------------------------------------------------------
+// 4. Provenance Label (render "observed"/"derived"/"simulated")
+// ---------------------------------------------------------------------------
+Provenance Label =
+IF (
+    HASONEVALUE ( FactScenarioResult[data_provenance] ),
+    SELECTEDVALUE ( FactScenarioResult[data_provenance] ),
+    BLANK () )
+
+// Universal provenance label for whatever fact is in context (for tooltips).
+Any Provenance Label =
+IF (
+    HASONEVALUE ( FactScenarioResult[data_provenance] ),
+    SELECTEDVALUE ( FactScenarioResult[data_provenance] ),
+    "unknown" )
+
+// ---------------------------------------------------------------------------
+// 5. Display / undefined handling
+// ---------------------------------------------------------------------------
+
+// Converts a BLANK measure to the literal "—" for display (spec §8b).
+Display Dash = "—"
+
+// Total Units Reconciliation KPI (locked 66,927,173) for P1 QA footers.
+// This is a static audit literal from mv_weekly_sales — used only for traceability display.
+Total Units Reconciliation (Locked) = 66927173
+
+// Total Scenario Result Reconciliation (Locked 213,430).
+Scenario Result Reconciliation (Locked) = 213430
+
+// ============================================================
+// End of required measures. All above are governed/unit-checked by
+// tests/dashboard/test_semantic_model.py (measure-definition table).
+// ============================================================

@@ -1,0 +1,125 @@
+{
+  "project": "Supply Chain & Demand Intelligence Platform",
+  "phase": 1,
+  "files": {
+    "calendar.csv": {
+      "filename": "calendar.csv",
+      "rows": 1969,
+      "columns": 14,
+      "min_date": "2011-01-29",
+      "max_date": "2016-06-19",
+      "duplicate_d": 0,
+      "duplicate_date": 0,
+      "missing_counts": {
+        "date": 0,
+        "wm_yr_wk": 0,
+        "weekday": 0,
+        "wday": 0,
+        "month": 0,
+        "year": 0,
+        "d": 0,
+        "event_name_1": 1807,
+        "event_type_1": 1807,
+        "event_name_2": 1964,
+        "event_type_2": 1964,
+        "snap_CA": 0,
+        "snap_TX": 0,
+        "snap_WI": 0
+      },
+      "event_columns": [
+        "event_name_1",
+        "event_type_1",
+        "event_name_2",
+        "event_type_2"
+      ],
+      "snap_columns": [
+        "snap_CA",
+        "snap_TX",
+        "snap_WI"
+      ],
+      "expected_days": 1969,
+      "actual_days": 1969,
+      "date_continuous": true,
+      "day_id_min": 1,
+      "day_id_max": 1969,
+      "day_id_continuous": true
+    },
+    "sell_prices.csv": {
+      "filename": "sell_prices.csv",
+      "rows": 6841121,
+      "columns": 4,
+      "duplicate_rows": 0,
+      "duplicate_keys": 0,
+      "item_count": 3049,
+      "store_count": 10,
+      "unique_weeks": 282,
+      "week_min": "11101",
+      "week_max": "11621",
+      "sell_price_missing": 0,
+      "sell_price_min": 0.01,
+      "sell_price_max": 107.32,
+      "sell_price_mean": 4.410952389235624,
+      "sell_price_negative": 0,
+      "sell_price_zero": 0
+    },
+    "sales_train_validation.csv": {
+      "filename": "sales_train_validation.csv",
+      "rows": 30490,
+      "columns": 1919,
+      "id_columns": [
+        "id",
+        "item_id",
+        "dept_id",
+        "cat_id",
+        "store_id",
+        "state_id"
+      ],
+      "sales_columns": 1913,
+      "product_count": 3049,
+      "store_count": 10,
+      "item_store_combinations": 30490,
+      "day_columns": [
+        "d_1",
+        "d_1913"
+      ],
+      "day_start": 1,
+      "day_end": 1913,
+      "total_demand": 65695409,
+      "zero_demand_fraction": 0.681963,
+      "negative_value_count": 0,
+      "duplicate_ids": 0,
+      "missing_cells": 0,
+      "expected_last_day_ok": true
+    },
+    "sales_train_evaluation.csv": {
+      "filename": "sales_train_evaluation.csv",
+      "rows": 30490,
+      "columns": 1947,
+      "id_columns": [
+        "id",
+        "item_id",
+        "dept_id",
+        "cat_id",
+        "store_id",
+        "state_id"
+      ],
+      "sales_columns": 1941,
+      "product_count": 3049,
+      "store_count": 10,
+      "item_store_combinations": 30490,
+      "day_columns": [
+        "d_1",
+        "d_1941"
+      ],
+      "day_start": 1,
+      "day_end": 1941,
+      "total_demand": 66927173,
+      "zero_demand_fraction": 0.679978,
+      "negative_value_count": 0,
+      "duplicate_ids": 0,
+      "missing_cells": 0,
+      "expected_last_day_ok": true
+    }
+  },
+  "missing_files": []
+}

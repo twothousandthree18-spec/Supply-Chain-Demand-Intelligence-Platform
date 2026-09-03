@@ -1,0 +1,167 @@
+{
+  "project": "Supply Chain & Demand Intelligence Platform",
+  "phase": 1,
+  "generated_at": "2026-08-29T23:31:25",
+  "summary": {
+    "total": 22,
+    "pass": 21,
+    "fail": 0,
+    "warn": 1
+  },
+  "checks": [
+    {
+      "category": "structural",
+      "check": "file_exists:calendar.csv",
+      "status": "pass",
+      "detail": "size=103469",
+      "severity": "info"
+    },
+    {
+      "category": "structural",
+      "check": "file_exists:sell_prices.csv",
+      "status": "pass",
+      "detail": "size=203395785",
+      "severity": "info"
+    },
+    {
+      "category": "structural",
+      "check": "file_exists:sales_train_validation.csv",
+      "status": "pass",
+      "detail": "size=120007726",
+      "severity": "info"
+    },
+    {
+      "category": "structural",
+      "check": "file_exists:sales_train_evaluation.csv",
+      "status": "pass",
+      "detail": "size=121736518",
+      "severity": "info"
+    },
+    {
+      "category": "structural",
+      "check": "calendar_columns",
+      "status": "pass",
+      "detail": "expected=14, got=14",
+      "severity": "info"
+    },
+    {
+      "category": "date",
+      "check": "calendar_duplicate_dates",
+      "status": "pass",
+      "detail": "0 duplicate dates",
+      "severity": "info"
+    },
+    {
+      "category": "date",
+      "check": "calendar_date_continuity",
+      "status": "pass",
+      "detail": "expected=1969 actual=1969 min=2011-01-29 max=2016-06-19",
+      "severity": "info"
+    },
+    {
+      "category": "duplicates",
+      "check": "dup_key:calendar_d",
+      "status": "pass",
+      "detail": "0 duplicate key rows (key=['d'])",
+      "severity": "info"
+    },
+    {
+      "category": "nulls",
+      "check": "null_critical:calendar_critical",
+      "status": "pass",
+      "detail": "no critical nulls",
+      "severity": "info"
+    },
+    {
+      "category": "structural",
+      "check": "sell_prices_columns",
+      "status": "pass",
+      "detail": "all required present",
+      "severity": "info"
+    },
+    {
+      "category": "numeric",
+      "check": "sell_price_range",
+      "status": "warn",
+      "detail": "min=0.01 max=107.32 negative=0 zero=0 zero=0 max=107.32",
+      "severity": "warning"
+    },
+    {
+      "category": "duplicates",
+      "check": "dup_key:sell_prices_key",
+      "status": "pass",
+      "detail": "0 duplicate key rows (key=['item_id', 'store_id', 'wm_yr_wk'])",
+      "severity": "info"
+    },
+    {
+      "category": "nulls",
+      "check": "null_critical:sell_prices_critical",
+      "status": "pass",
+      "detail": "no critical nulls",
+      "severity": "info"
+    },
+    {
+      "category": "structural",
+      "check": "sales_columns",
+      "status": "pass",
+      "detail": "required id cols present",
+      "severity": "info"
+    },
+    {
+      "category": "structural",
+      "check": "sales_days",
+      "status": "pass",
+      "detail": "sales columns detected=1913",
+      "severity": "info"
+    },
+    {
+      "category": "structural",
+      "check": "sales_numeric_dtype",
+      "status": "pass",
+      "detail": "all 1913 sales cols numeric",
+      "severity": "info"
+    },
+    {
+      "category": "duplicates",
+      "check": "dup_key:sales_train_id",
+      "status": "pass",
+      "detail": "0 duplicate key rows (key=['id'])",
+      "severity": "info"
+    },
+    {
+      "category": "duplicates",
+      "check": "dup_key:sales_train_item_store",
+      "status": "pass",
+      "detail": "0 duplicate key rows (key=['item_id', 'store_id'])",
+      "severity": "info"
+    },
+    {
+      "category": "numeric",
+      "check": "negative_demand",
+      "status": "pass",
+      "detail": "0 negative cells (should be 0 for unit counts)",
+      "severity": "info"
+    },
+    {
+      "category": "nulls",
+      "check": "null_critical:sales_train_critical",
+      "status": "pass",
+      "detail": "no critical nulls",
+      "severity": "info"
+    },
+    {
+      "category": "m5",
+      "check": "m5_dept_cat_consistency",
+      "status": "pass",
+      "detail": "each dept maps to a single category",
+      "severity": "info"
+    },
+    {
+      "category": "m5",
+      "check": "m5_hierarchy_extent",
+      "status": "pass",
+      "detail": "products=3049 stores=10 (expected 3049 / 10)",
+      "severity": "info"
+    }
+  ]
+}

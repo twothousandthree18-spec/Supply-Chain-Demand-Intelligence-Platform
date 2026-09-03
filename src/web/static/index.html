@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Supply Chain & Demand Intelligence Platform</title>
+  <meta name="description" content="Demand Forecasting, Inventory Risk & Operational Decision Intelligence" />
+  <link rel="stylesheet" href="/static/css/tokens.css" />
+  <link rel="stylesheet" href="/static/css/base.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand__name">Supply Chain &amp; Demand Intelligence</span>
+        <span class="brand__sub">Forecasting · Inventory Risk · Operational Decision Intelligence</span>
+      </div>
+      <nav class="app-nav" id="app-nav" aria-label="Product areas">
+        <a class="nav-link" href="#/executive" data-view="executive" aria-current="page">Executive</a>
+        <a class="nav-link" href="#/demand" data-view="demand">Demand</a>
+        <a class="nav-link" href="#/forecast" data-view="forecast">Forecast</a>
+        <a class="nav-link" href="#/inventory" data-view="inventory">Inventory</a>
+        <a class="nav-link" href="#/scenario" data-view="scenario">Scenario</a>
+        <a class="nav-link" href="#/risk" data-view="risk">Operational Risk</a>
+      </nav>
+    </header>
+
+    <main class="app-main" id="app-main">
+      <section class="view is-active" id="view-executive" data-title="Executive Dashboard">
+        <div class="section-title">
+          <nav class="crumb" aria-label="Breadcrumb"><ol><li><a href="#/executive">Home</a></li><li aria-current="page">Executive Dashboard</li></ol></nav>
+          <h2>Executive Dashboard</h2>
+          <p class="subtitle" id="view-sub-executive"></p>
+        </div>
+
+        <div class="filter-bar" id="exec-filter-bar" role="group" aria-label="Business filters">
+          <label class="filter">
+            <span>Department</span>
+            <select id="f-department"><option value="">All departments</option></select>
+          </label>
+          <label class="filter">
+            <span>Category</span>
+            <select id="f-category"><option value="">All categories</option></select>
+          </label>
+          <label class="filter">
+            <span>State / Region</span>
+            <select id="f-state"><option value="">All states</option></select>
+          </label>
+          <label class="filter">
+            <span>Store</span>
+            <select id="f-store"><option value="">All stores</option></select>
+          </label>
+          <label class="filter">
+            <span>Product</span>
+            <input id="f-product" type="text" placeholder="Optional product id" autocomplete="off" />
+          </label>
+          <label class="filter">
+            <span>Top contributors</span>
+            <select id="f-topn">
+              <option value="5">5</option>
+              <option value="10" selected>10</option>
+              <option value="25">25</option>
+              <option value="50">50</option>
+            </select>
+          </label>
+          <button class="btn" id="filter-reset" type="button">Reset</button>
+          <span class="filter__hint" id="filter-hint" title="Filters scope the Demand Performance concentration view only; headline revenue/volume are full-portfolio.">Filters scope the concentration view (headline KPIs are full-portfolio)</span>
+        </div>
+
+        <section class="exec-kpis mb-4" id="exec-kpis" aria-label="Key performance indicators">
+          <div class="state"><div class="spinner"></div><span>Loading headline KPIs…</span></div>
+        </section>
+
+        <div class="exec-grid">
+          <section class="card" id="exec-demand" aria-label="Demand performance"></section>
+          <section class="card" id="exec-inventory" aria-label="Inventory health"></section>
+        </div>
+
+        <section class="card mt-4" id="exec-signals" aria-label="Operational signals"></section>
+      </section>
+
+      <section class="view" id="view-demand" data-title="Demand Intelligence">
+        <div class="section-title">
+          <nav class="crumb" aria-label="Breadcrumb"><ol><li><a href="#/executive">Home</a></li><li aria-current="page">Demand Intelligence</li></ol></nav>
+          <h2>Demand Intelligence</h2>
+          <p class="subtitle" id="view-sub-demand"></p>
+        </div>
+
+        <div class="filter-bar" id="demand-filter-bar" role="group" aria-label="Demand filters">
+          <label class="filter"><span>Department</span><select id="d-department"><option value="">All departments</option></select></label>
+          <label class="filter"><span>Category</span><select id="d-category"><option value="">All categories</option></select></label>
+          <label class="filter"><span>State / Region</span><select id="d-state"><option value="">All states</option></select></label>
+          <label class="filter"><span>Store</span><select id="d-store"><option value="">All stores</option></select></label>
+          <label class="filter"><span>Trend</span><select id="d-trend"><option value="">All trends</option><option value="increasing">Increasing</option><option value="flat">Flat</option><option value="decreasing">Decreasing</option></select></label>
+          <label class="filter"><span>Volatility</span><select id="d-volatility"><option value="">All volatility</option><option value="Low">Low</option><option value="Medium">Medium</option><option value="High">High</option></select></label>
+          <label class="filter"><span>Volume class</span><select id="d-volume"><option value="">All volume</option><option value="Low">Low</option><option value="Medium">Medium</option><option value="High">High</option></select></label>
+          <label class="filter"><span>Risk category</span><select id="d-risk"><option value="">All risk</option><option value="Critical">Critical</option><option value="High">High</option><option value="Moderate">Moderate</option></select></label>
+          <label class="filter"><span>Product</span><input id="d-product" type="text" placeholder="Optional product id" autocomplete="off" /></label>
+          <label class="filter"><span>Rows per page</span><select id="d-page-size"><option value="10">10</option><option value="25" selected>25</option><option value="50">50</option></select></label>
+          <button class="btn" id="d-reset" type="button">Reset</button>
+          <span class="filter__hint" id="demand-filter-hint">Filters scope the risk matrix and series table (server-side); notes the observed window.</span>
+        </div>
+
+        <section class="card" id="demand-summary" aria-label="Demand summary"></section>
+
+        <div class="exec-grid mt-4">
+          <section class="card" id="demand-matrix" aria-label="Volume × volatility risk matrix"></section>
+          <section class="card" id="demand-risk" aria-label="Risk category break"></section>
+        </div>
+
+        <section class="card mt-4" id="demand-table" aria-label="Demand series"></section>
+      </section>
+
+      <section class="view" id="view-forecast" data-title="Forecast Intelligence">
+        <div class="section-title">
+          <nav class="crumb" aria-label="Breadcrumb"><ol><li><a href="#/executive">Home</a></li><li aria-current="page">Forecast Intelligence</li></ol></nav>
+          <h2>Forecast Intelligence</h2>
+          <p class="subtitle" id="view-sub-forecast"></p>
+        </div>
+
+        <div class="filter-bar" id="forecast-filter-bar" role="group" aria-label="Forecast filters">
+          <label class="filter"><span>Series</span><input id="fc-series" type="text" placeholder="product:store e.g. HOUSEHOLD_1_054:WI_3" autocomplete="off" /></label>
+          <button class="btn" id="fc-view-series" type="button">View series forecast</button>
+          <span class="filter__hint" id="forecast-filter-hint">Left: model selection &amp; accuracy. Right: a single series' 28-day final forecast (bounded; loaded only when a series is chosen).</span>
+        </div>
+
+        <section class="card" id="forecast-selection" aria-label="Model selection"></section>
+
+        <section class="card mt-4" id="forecast-accuracy" aria-label="Forecast accuracy"></section>
+
+        <section class="card mt-4" id="forecast-series-card" aria-label="Series forecast"></section>
+      </section>
+
+      <section class="view" id="view-inventory" data-title="Inventory Intelligence">
+        <div class="section-title">
+          <nav class="crumb" aria-label="Breadcrumb"><ol><li><a href="#/executive">Home</a></li><li aria-current="page">Inventory Intelligence</li></ol></nav>
+          <h2>Inventory Intelligence</h2>
+          <p class="subtitle" id="view-sub-inventory"></p>
+        </div>
+
+        <div class="filter-bar" id="inventory-filter-bar" role="group" aria-label="Inventory filters">
+          <label class="filter"><span>Series</span><input id="inv-series" type="text" placeholder="product:store e.g. HOUSEHOLD_1_054:WI_3" autocomplete="off" /></label>
+          <button class="btn" id="inv-view-series" type="button">View series horizon</button>
+          <span class="filter__hint" id="inventory-filter-hint">All figures are simulated (baseline assumption set), never observed inventory. Horizon is a bounded 28-row per-series view.</span>
+        </div>
+
+        <section class="card" id="inventory-summary" aria-label="Inventory summary"></section>
+
+        <div class="exec-grid mt-4">
+          <section class="card" id="inventory-horizon" aria-label="Inventory horizon"></section>
+          <section class="card" id="inventory-policy" aria-label="Inventory policy"></section>
+        </div>
+      </section>
+
+      <section class="view" id="view-scenario" data-title="Scenario Intelligence">
+        <div class="section-title">
+          <nav class="crumb" aria-label="Breadcrumb"><ol><li><a href="#/executive">Home</a></li><li aria-current="page">Scenario Intelligence</li></ol></nav>
+          <h2>Scenario Intelligence</h2>
+          <p class="subtitle" id="view-sub-scenario"></p>
+        </div>
+
+        <div class="filter-bar" id="scenario-filter-bar" role="group" aria-label="Scenario filters">
+          <label class="filter"><span>Scenario type</span><select id="sc-type"><option value="">All types</option><option value="simulation">Simulation scenarios</option><option value="rank">Ranking scenarios</option></select></label>
+          <label class="filter"><span>Scenario</span><select id="sc-name"><option value="">All scenarios</option></select></label>
+          <button class="btn" id="sc-reset" type="button">Reset</button>
+          <span class="filter__hint" id="scenario-filter-hint">Filters the scenario list and deltas (server-side where possible); comparison tradeoffs are a locked empty state until action-tradeoff data exists.</span>
+        </div>
+
+        <section class="card" id="scenario-status" aria-label="Scenario run status"></section>
+
+        <section class="card mt-4" id="scenario-deltas" aria-label="Scenario deltas vs baseline"></section>
+
+        <section class="card mt-4" id="scenario-comparison" aria-label="Action tradeoff comparison"></section>
+      </section>
+
+      <section class="view" id="view-risk" data-title="Operational Risk / Priority">
+        <div class="section-title">
+          <nav class="crumb" aria-label="Breadcrumb"><ol><li><a href="#/executive">Home</a></li><li aria-current="page">Operational Risk / Priority</li></ol></nav>
+          <h2>Operational Risk / Priority</h2>
+          <p class="subtitle" id="view-sub-risk"></p>
+        </div>
+
+        <div class="filter-bar" id="risk-filter-bar" role="group" aria-label="Risk filters">
+          <label class="filter"><span>Risk type</span><select id="rk-type"><option value="stockout">Stockout risk</option><option value="excess">Excess inventory risk</option></select></label>
+          <label class="filter"><span>Risk tier</span><select id="rk-tier"><option value="">All tiers</option><option value="Critical">Critical</option><option value="High">High</option><option value="Medium">Medium</option><option value="Low">Low</option></select></label>
+          <label class="filter"><span>Department</span><select id="rk-department"><option value="">All departments</option></select></label>
+          <label class="filter"><span>Category</span><select id="rk-category"><option value="">All categories</option></select></label>
+          <label class="filter"><span>State / Region</span><select id="rk-state"><option value="">All states</option></select></label>
+          <label class="filter"><span>Store</span><select id="rk-store"><option value="">All stores</option></select></label>
+          <label class="filter"><span>Product</span><input id="rk-product" type="text" placeholder="Optional product id" autocomplete="off" /></label>
+          <label class="filter"><span>Top-N</span><select id="rk-topn"><option value="25" selected>25</option><option value="50">50</option><option value="100">100</option><option value="200">200</option></select></label>
+          <button class="btn" id="rk-reset" type="button">Reset</button>
+          <span class="filter__hint" id="risk-filter-hint">Rankings are deterministic by native risk rank (1..30,490), server-side paginated. Select a ranked series to open its risk-component breakdown.</span>
+        </div>
+
+        <section class="card" id="risk-distribution" aria-label="Risk distribution"></section>
+
+        <section class="card mt-4" id="risk-table" aria-label="Risk ranking worklist"></section>
+
+        <section class="card mt-4" id="risk-driver" aria-label="Risk driver detail"></section>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <span>&copy; 2026 Supply Chain &amp; Demand Intelligence Platform</span>
+      <span id="footer-provenance">Observed · Derived · Simulated</span>
+    </footer>
+  </div>
+
+  <script src="/static/js/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+{
+  "version": "phase5-step2",
+  "pages_order": ["P1_Executive_Overview", "P2_Demand_Overview", "P3_Forecast_Performance", "P4_Inventory_Risk", "P5_Stockout_Excess_Risk", "P6_Scenario_Comparison", "P7_Prioritized_Operational_Insights"],
+  "pages": {
+    "P1_Executive_Overview": {
+      "title": "Executive Overview",
+      "provenance": ["derived", "simulated"],
+      "model_tables": ["FactWeeklySales", "FactScenarioResult", "DimWeek", "DimProduct", "DimCategory", "DimDepartment", "DimStore", "DimScenario", "DimScenarioRun"],
+      "measures_used": ["Total Revenue", "Total Units", "Revenue WoW %", "Units WoW %", "Revenue QoQ %", "Revenue YoY %", "Units YoY %", "Product Revenue Share %", "Cumulative Product Revenue Share %", "Weighted Price", "Avg Days of Inventory", "Avg Service Level", "Series at Risk Count", "Provenance Label", "Display Dash"],
+      "reconcile_anchors": { "units": 66927173, "scenario_grain": 213430 },
+      "bounded_day_horizon": false
+    },
+    "P2_Demand_Overview": {
+      "title": "Demand Overview",
+      "provenance": ["derived"],
+      "model_tables": ["FactDemandAnalysis", "FactDemandSeasonality", "FactDemandSeasonalityDow", "DimProduct", "DimStore", "DimCategory", "DimDepartment", "DimDate"],
+      "measures_used": ["Series Count", "Display Dash"],
+      "reconcile_anchors": { "analysis_grain": 30490, "seasonality_grain": 359181 },
+      "bounded_day_horizon": false
+    },
+    "P3_Forecast_Performance": {
+      "title": "Forecast Performance",
+      "provenance": ["derived"],
+      "model_tables": ["FactForecastEvaluation", "FactForecast", "DimModel", "DimProduct", "DimStore", "DimDepartment", "DimCategory", "DimDate"],
+      "measures_used": ["Forecast WMAE", "Forecast WRMSE", "Forecast MAE", "Forecast RMSE", "Forecast Bias", "Provenance Label", "Display Dash"],
+      "reconcile_anchors": { "forecast_grain": 853720, "evaluation_grain": 122088, "horizon_start": 1942, "horizon_end": 1969 },
+      "bounded_day_horizon": true,
+      "pilot_rule": true
+    },
+    "P4_Inventory_Risk": {
+      "title": "Inventory Risk",
+      "provenance": ["simulated"],
+      "model_tables": ["FactInventorySimulation", "DimProduct", "DimStore", "DimDepartment", "DimCategory", "DimDate", "DimAssumptionSet"],
+      "measures_used": ["Avg Service Level", "Fill Rate", "Avg Days of Inventory", "Avg Inventory Position", "Fill Service Gap", "Series Count", "Display Dash"],
+      "reconcile_anchors": { "inventory_grain": 853720, "horizon_start": 1942, "horizon_end": 1969 },
+      "bounded_day_horizon": true
+    },
+    "P5_Stockout_Excess_Risk": {
+      "title": "Stockout & Excess Risk",
+      "provenance": ["simulated"],
+      "model_tables": ["FactScenarioResult", "DimScenarioRun", "DimScenario", "DimProduct", "DimStore", "DimDepartment", "DimCategory"],
+      "measures_used": ["Series at Risk Count", "Series Count", "Stockout Risk Score", "Excess Risk Score", "Stockout Risk Rank", "Excess Risk Rank", "Total Stockout Units", "Total Stockout Days", "Total Excess Units", "Total Excess Days", "Display Dash"],
+      "reconcile_anchors": { "scenario_grain": 213430, "risk_rank_per_run": 30490 },
+      "bounded_day_horizon": false
+    },
+    "P6_Scenario_Comparison": {
+      "title": "Scenario Comparison",
+      "provenance": ["simulated"],
+      "model_tables": ["FactScenarioResult", "FactScenarioComparison", "DimScenario", "DimScenarioRun", "DimAssumptionSet", "DimProduct", "DimStore", "DimDepartment", "DimCategory"],
+      "measures_used": ["Total Stockout Units", "Avg Service Level", "Total Excess Days", "Fill Rate", "Avg Inventory Position", "Scenario Delta Stockout Units", "Scenario Delta Service Level", "Scenario Delta Excess Days", "Scenario Delta Fill Rate", "Scenario Delta Avg Inventory Position", "Series Count", "Display Dash"],
+      "reconcile_anchors": { "scenario_comparison_grain": 0 },
+      "bounded_day_horizon": false,
+      "empty_state_fact_comparison": true
+    },
+    "P7_Prioritized_Operational_Insights": {
+      "title": "Prioritized Operational Insights",
+      "provenance": ["simulated"],
+      "model_tables": ["FactScenarioResult", "DimProduct", "DimStore", "DimCategory", "DimDepartment", "DimScenarioRun"],
+      "measures_used": ["Series at Risk Count", "Stockout Risk Rank", "Excess Risk Rank", "Scenario Delta", "Avg Service Level", "Fill Rate", "Avg Days of Inventory", "Avg Inventory Position", "Total Stockout Units", "Total Stockout Days", "Total Excess Units", "Total Excess Days", "Display Dash"],
+      "reconcile_anchors": { "scenario_grain": 213430, "risk_rank_per_run": 30490 },
+      "bounded_day_horizon": false
+    }
+  }
+}

@@ -1,0 +1,503 @@
+/* ============================================================
+   Supply Chain & Demand Intelligence Platform — Phase 6
+   Global Styling Foundation (Steps 1–2)
+   ============================================================ */
+
+/* --- Reset & base --- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg-app);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+h1, h2, h3, h4 { font-family: var(--font-display); color: var(--text-primary); margin: 0; }
+h1 { font-size: var(--text-h1); }
+h2 { font-size: var(--text-h2); }
+h3 { font-size: var(--text-h3); }
+h4 { font-size: var(--text-h4); }
+
+.num, .metric-value { font-variant-numeric: tabular-nums; font-weight: 600; }
+.caption { font-size: var(--text-caption); color: var(--text-secondary); }
+
+/* --- App shell layout --- */
+.app { min-height: 100vh; display: flex; flex-direction: column; }
+
+.app-header {
+  display: flex; align-items: center; gap: var(--space-5);
+  padding: var(--space-4) var(--space-6);
+  background: var(--color-deep-jade);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 20;
+}
+.brand { display: flex; flex-direction: column; line-height: 1.2; }
+.brand__name { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; letter-spacing: 0.2px; }
+.brand__sub { font-size: var(--text-caption); color: var(--text-secondary); }
+
+.app-nav { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+.nav-link {
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  border: 1px solid transparent;
+}
+.nav-link:hover { background: rgba(25,230,177,0.08); text-decoration: none; color: var(--accent); }
+.nav-link[aria-current="page"] {
+  background: var(--color-electric-jade);
+  color: var(--color-obsidian);
+  font-weight: 600;
+}
+
+.app-main { flex: 1; padding: var(--space-6); width: 100%; max-width: 1400px; margin: 0 auto; }
+.app-footer {
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--border);
+  font-size: var(--text-caption);
+  color: var(--text-secondary);
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--space-2);
+}
+
+/* --- Content areas / views --- */
+.view { display: none; }
+.view.is-active { display: block; }
+
+.section-title { margin: var(--space-5) 0 var(--space-3); }
+.section-title h2 { display: flex; align-items: center; gap: var(--space-2); }
+.subtitle { color: var(--text-secondary); margin-top: var(--space-1); max-width: 72ch; }
+
+/* --- Cards / panels --- */
+.card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+}
+.card + .card { margin-top: var(--space-4); }
+.card__title { font-family: var(--font-display); font-weight: 600; font-size: var(--text-h4); }
+.card__foot { margin-top: var(--space-3); font-size: var(--text-caption); color: var(--text-secondary); }
+
+.grid { display: grid; gap: var(--space-4); }
+.grid-kpi { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+.grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+
+/* --- KPI cards --- */
+.kpi {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  display: flex; flex-direction: column; gap: var(--space-1);
+}
+.kpi__label { font-size: var(--text-caption); text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); }
+.kpi__value { font-size: 1.5rem; font-weight: 700; }
+.kpi__value.is-undefined, .metric-value.is-undefined { color: var(--text-secondary); }
+.kpi__sub { font-size: var(--text-caption); color: var(--text-secondary); }
+.kpi--warning { border-left-color: var(--color-champagne); }
+.kpi--danger { border-left-color: var(--color-danger); }
+
+/* --- Provenance chip --- */
+.chip {
+  display: inline-flex; align-items: center; gap: var(--space-1);
+  font-size: var(--text-chip); font-weight: 600;
+  padding: 1px var(--space-2); border-radius: 999px;
+  white-space: nowrap; text-transform: uppercase; letter-spacing: 0.4px;
+}
+.chip--observed  { color: var(--color-obsidian); background: var(--color-soft-white); }
+.chip--derived   { color: var(--color-obsidian); background: var(--color-electric-jade); }
+.chip--simulated { color: var(--color-obsidian); background: var(--color-champagne); }
+
+/* --- Risk tier chip --- */
+.tier {
+  display: inline-flex; padding: 1px var(--space-2); border-radius: var(--radius-sm);
+  font-size: var(--text-chip); font-weight: 700; color: var(--color-soft-white);
+}
+.tier--critical { background: var(--tier-critical); }
+.tier--high     { background: var(--tier-high); }
+.tier--medium   { background: var(--tier-medium); color: var(--color-obsidian); }
+.tier--low      { background: var(--tier-low); color: var(--color-obsidian); }
+
+/* --- Tables --- */
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: var(--text-data); }
+th, td { text-align: left; padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--border); }
+th { color: var(--text-secondary); font-weight: 600; font-size: var(--text-caption); text-transform: uppercase; letter-spacing: 0.4px; white-space: nowrap; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tbody tr:hover { background: rgba(25,230,177,0.05); }
+
+/* --- Pagination --- */
+.pagination { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-3); }
+.pagination button {
+  background: var(--bg-surface); color: var(--text-primary);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-3); cursor: pointer;
+}
+.pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+.pagination__info { font-size: var(--text-caption); color: var(--text-secondary); }
+
+/* --- States: loading / empty / error --- */
+.state { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); padding: var(--space-8); text-align: center; color: var(--text-secondary); }
+.state--error { color: var(--color-champagne); }
+.spinner { width: 26px; height: 26px; border: 3px solid var(--bg-surface); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.dash { color: var(--text-secondary); }
+
+/* --- Utils --- */
+.m-0 { margin: 0; } .mt-2 { margin-top: var(--space-2); } .mt-4 { margin-top: var(--space-4); }
+.d-flex { display: flex; } .gap-2 { gap: var(--space-2); } .items-center { align-items: center; }
+.wrap { flex-wrap: wrap; }
+
+/* --- Responsive --- */
+@media (max-width: 760px) {
+  .app-header { flex-direction: column; align-items: flex-start; gap: var(--space-3); }
+  .app-main { padding: var(--space-4); }
+  .grid-kpi { grid-template-columns: 1fr 1fr; }
+  .app-footer { flex-direction: column; gap: var(--space-2); }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; }
+}
+
+/* ============================================================
+   Executive Dashboard (Step 4) — locked-palette components
+   ============================================================ */
+
+/* --- Business filter bar --- */
+.filter-bar {
+  display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: flex-end;
+  padding: var(--space-4); margin-bottom: var(--space-4);
+  background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius-md);
+}
+.filter { display: flex; flex-direction: column; gap: var(--space-1); }
+.filter > span { font-size: var(--text-chip); text-transform: uppercase; letter-spacing: 0.4px; color: var(--text-secondary); }
+.filter select, .filter input {
+  background: var(--bg-surface); color: var(--text-primary);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3); font-size: var(--text-data); min-width: 140px;
+}
+.filter select:focus-visible, .filter input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.btn {
+  background: var(--color-electric-jade); color: var(--color-obsidian);
+  border: 1px solid transparent; border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-4); font-weight: 700; cursor: pointer;
+  font-size: var(--text-data);
+}
+.btn:hover { filter: brightness(1.05); }
+.filter__hint { font-size: var(--text-caption); color: var(--text-secondary); align-self: flex-end; max-width: 44ch; }
+
+/* --- Executive KPI header --- */
+.exec-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-3); }
+.kpi--risk { border-left-color: var(--color-danger); }
+.kpi--neutral { border-left-color: var(--color-champagne); }
+.arrow-up  { color: var(--color-electric-jade); }
+.arrow-flat{ color: var(--text-secondary); }
+.arrow-down{ color: var(--color-danger); }
+
+/* --- Executive content grid --- */
+.exec-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--space-4); }
+.exec-grid .card { margin: 0; min-width: 0; }
+
+/* --- Trend bars (revenue / units) --- */
+.trend { display: flex; flex-direction: column; gap: var(--space-3); }
+.trend__bars { display: flex; align-items: flex-end; gap: 6px; height: 120px; }
+.trend__bars .bar {
+  flex: 1; min-width: 8px; border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  background: var(--color-electric-jade); position: relative;
+}
+.trend__bars .bar.units { background: var(--color-deep-jade); }
+.trend__bars .bar span { position: absolute; top: -18px; left: 0; right: 0; text-align: center; font-size: 0.62rem; color: var(--text-secondary); }
+.trend__x { display: flex; justify-content: space-between; font-size: var(--text-chip); color: var(--text-secondary); }
+
+/* --- Growth direction chips --- */
+.direction { display: inline-flex; align-items: center; gap: var(--space-1); font-weight: 700; font-size: var(--text-data); }
+.chiplist { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-2); }
+
+/* --- Contribution / concentration --- */
+.contribution { display: flex; flex-direction: column; gap: var(--space-2); }
+.contribution .row { display: flex; align-items: center; gap: var(--space-2); }
+.contribution .ent { flex: 0 0 38%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.contribution .share { width: 42px; text-align: right; font-variant-numeric: tabular-nums; }
+.contribution .bar-track { flex: 1; height: 10px; background: var(--bg-surface); border-radius: 999px; overflow: hidden; }
+.contribution .bar-fill { height: 100%; background: var(--color-electric-jade); border-radius: 999px; }
+.contribution .bar-fill.alt { background: var(--color-champagne); }
+
+/* --- Inventory health meters --- */
+.health { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+.health .meter { display: flex; flex-direction: column; gap: var(--space-1); }
+.meter__track { height: 12px; background: var(--bg-surface); border-radius: 999px; overflow: hidden; }
+.meter__fill { height: 100%; background: var(--color-electric-jade); border-radius: 999px; }
+.meter__fill.warn { background: var(--color-champagne); }
+.meter__fill.danger { background: var(--color-danger); }
+
+/* --- Operational signals list --- */
+.signal { display: flex; gap: var(--space-3); padding: var(--space-3) 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+.signal:last-child { border-bottom: 0; }
+.signal__entity { font-weight: 700; }
+.signal__meta { font-size: var(--text-caption); color: var(--text-secondary); }
+.signal__why { margin-top: var(--space-1); font-size: var(--text-data); }
+
+/* --- Tooltip (metric explanations) --- */
+[data-tip] { position: relative; cursor: help; border-bottom: 1px dotted var(--text-secondary); }
+[data-tip]::after {
+  content: attr(data-tip);
+  position: absolute; left: 0; bottom: calc(100% + 6px); z-index: 30;
+  width: max-content; max-width: 240px; padding: var(--space-2) var(--space-3);
+  background: var(--color-deep-jade); color: var(--color-soft-white);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  font-size: var(--text-caption); line-height: 1.4; font-weight: 400;
+  opacity: 0; visibility: hidden; transition: opacity 0.15s ease;
+}
+[data-tip]:hover::after, [data-tip]:focus-visible::after { opacity: 1; visibility: visible; }
+
+.mb-4 { margin-bottom: var(--space-4); }
+
+/* --- Executive responsive --- */
+@media (max-width: 980px) {
+  .exec-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ============================================================
+   Step 5 — Demand / Forecast / Inventory pages (locked-palette)
+   ============================================================ */
+
+/* --- Badges (pilot / cautious) --- */
+.badge {
+  display: inline-flex; align-items: center; gap: var(--space-1);
+  font-size: var(--text-chip); font-weight: 700; padding: 1px var(--space-2);
+  border-radius: 999px; text-transform: uppercase; letter-spacing: 0.4px;
+}
+.badge--pilot   { color: var(--color-obsidian); background: var(--color-champagne); }
+.badge--sim     { color: var(--color-obsidian); background: var(--color-champagne); }
+.badge--warn    { color: var(--color-soft-white); background: var(--color-danger); }
+
+/* --- Risk matrix (volume × volatility) --- */
+.matrix { display: grid; gap: 2px; }
+.matrix__header { display: grid; gap: 2px; margin-bottom: 2px; font-size: var(--text-chip); color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.4px; }
+.matrix__row { display: grid; gap: 2px; }
+.matrix__cell {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm);
+  background: var(--bg-surface); font-size: var(--text-data);
+}
+.matrix__cell .n { font-weight: 700; font-variant-numeric: tabular-nums; }
+.matrix__cell:hover { outline: 1px solid var(--accent); }
+.cell--warm { background: var(--color-champagne); color: var(--color-obsidian); }
+.cell--hot  { background: var(--color-danger); color: var(--color-soft-white); }
+.cell--zero { color: var(--text-secondary); }
+
+/* --- KPI row on Demand/Forecast/Inventory summary --- */
+.kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--space-3); }
+
+/* --- Demand series table cells --- */
+.season { font-size: var(--text-caption); }
+.peak { color: var(--color-electric-jade); }
+.trough { color: var(--color-champagne); }
+
+/* --- Model selection cards --- */
+.model-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-3); }
+.model-card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-3); }
+.model-card.is-selected { border-color: var(--accent); border-left: 3px solid var(--accent); }
+.model-card.is-pilot { border-color: var(--color-champagne); border-left: 3px solid var(--color-champagne); }
+.model-card__name { font-family: var(--font-display); font-weight: 700; }
+.model-card__meta { font-size: var(--text-caption); color: var(--text-secondary); }
+.model-card__metric { display: flex; justify-content: space-between; font-size: var(--text-data); padding: 1px 0; }
+
+/* --- Accuracy table pilot treatment --- */
+.support-pilot { color: var(--color-champagne); font-weight: 700; }
+.support-full  { color: var(--text-secondary); }
+td.swatch { color: var(--text-secondary); font-size: var(--text-caption); }
+.caveat { border-left: 3px solid var(--color-champagne); padding: var(--space-3); background: var(--bg-panel); margin-top: var(--space-3); }
+
+/* --- Forecast series bars / interval --- */
+.fc-bars { display: flex; align-items: flex-end; gap: 6px; height: 140px; margin-bottom: var(--space-2); }
+.fc-bar { flex: 1; min-width: 8px; background: var(--color-electric-jade); border-radius: var(--radius-sm) var(--radius-sm) 0 0; position: relative; }
+.fc-bar.low { background: var(--color-deep-jade); }
+.fc-bar.zero { background: var(--bg-surface); }
+
+/* --- Inventory KPI highlights --- */
+.metric { display: flex; flex-direction: column; gap: var(--space-1); background: var(--bg-panel); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: var(--radius-md); padding: var(--space-3); }
+.metric__label { font-size: var(--text-caption); text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); }
+.metric__value { font-size: 1.25rem; font-weight: 700; }
+.metric__value.is-undefined { color: var(--text-secondary); }
+.metric--risk { border-left-color: var(--color-danger); }
+
+/* --- Horizon trend --- */
+.hz-bars { display: flex; align-items: flex-end; gap: 5px; height: 120px; }
+.hz-bar { flex: 1; min-width: 6px; background: var(--color-electric-jade); border-radius: 2px; }
+.hz-bar.danger { background: var(--color-danger); }
+
+/* --- Definition list for policy/assumptions --- */
+.dl { display: grid; grid-template-columns: 200px 1fr; gap: var(--space-1) var(--space-3); font-size: var(--text-data); }
+.dl dt { color: var(--text-secondary); font-size: var(--text-caption); text-transform: uppercase; letter-spacing: 0.4px; padding-top: 1px; }
+.dl dd { margin: 0; }
+
+/* --- Split filter/action row on series views --- */
+.series-actions { display: flex; gap: var(--space-3); align-items: flex-end; flex-wrap: wrap; }
+.series-key { font-family: var(--font-mono); }
+
+/* --- Empty table body tone --- */
+.tbody-empty td { text-align: center; color: var(--text-secondary); padding: var(--space-6); }
+/* ============================================================
+   Phase 6 — Step 6 : Scenario & Risk Intelligence components
+   Locked palette only; danger family reserved for risk severity.
+   ============================================================ */
+
+/* --- Scenario status list --- */
+.scen-status { display: grid; gap: var(--space-3); }
+.scen-row { display: grid; grid-template-columns: 150px 1fr auto; gap: var(--space-3); align-items: center; background: var(--bg-panel); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: var(--radius-md); padding: var(--space-3); }
+.scen-row--rank { border-left-color: var(--accent-2); }
+.scen-row--baseline { border-left-color: var(--color-soft-white); }
+.scen-row__name { font-family: var(--font-display); font-weight: 700; }
+.scen-row__meta { font-size: var(--text-caption); color: var(--text-secondary); margin-top: 2px; }
+.scen-row__stat { text-align: right; font-size: var(--text-caption); color: var(--text-secondary); }
+
+/* --- Scenario delta table --- */
+.delta-up { color: var(--color-electric-jade); }
+.delta-down { color: var(--color-champagne); }
+.delta-bad { color: var(--color-danger); }
+td .dg { font-family: var(--font-mono); }
+
+/* --- Risk matrix heat (volume x volatility analog) --- */
+.matrix__cell.cell--hot { background: var(--color-danger); }
+.matrix__cell.cell--warm { background: var(--color-danger-muted); }
+
+/* --- Risk distribution / tier counts --- */
+.tierlist { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-3); }
+.tiercount { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-3); text-align: center; }
+.tiercount--critical { border-top: 3px solid var(--color-danger-muted); }
+.tiercount--high { border-top: 3px solid var(--color-danger); }
+.tiercount--medium { border-top: 3px solid var(--color-champagne); }
+.tiercount--low { border-top: 3px solid var(--color-electric-jade); }
+.tiercount__n { font-size: 1.6rem; font-weight: 700; }
+.tiercount__label { font-size: var(--text-caption); color: var(--text-secondary); }
+
+/* --- Risk ranking rows: clickable for drill-down --- */
+.risk-row { cursor: pointer; }
+.risk-row:hover td { background: rgba(25, 230, 177, 0.04); }
+td .series-key { font-family: var(--font-mono); }
+.risk-score-cell { font-weight: 700; }
+
+/* --- Evidence / driver breakdown --- */
+.evidence { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: var(--space-3); }
+.evidence__item { background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-3); }
+.evidence__label { font-size: var(--text-caption); color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.4px; }
+.evidence__val { font-size: 1.05rem; font-weight: 700; margin-top: 2px; }
+
+/* --- Risk worklist row emphasis --- */
+.rk-critical { color: var(--color-danger); }
+.rk-high { color: var(--color-danger); }
+.rk-medium { color: var(--color-champagne); }
+.rk-low { color: var(--color-electric-jade); }
+
+/* ============================================================
+   Phase 6 — Step 7 : Shared UX, accessibility & responsive layer
+   Locked palette only; danger family reserved for risk severity.
+   ============================================================ */
+
+/* --- Visually hidden but available to assistive tech --- */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* --- Breadcrumb / context strip (cross-page navigation) --- */
+.crumb {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2);
+  font-size: var(--text-caption); color: var(--text-secondary);
+  margin-bottom: var(--space-2);
+}
+.crumb ol { list-style: none; display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; padding: 0; }
+.crumb li { display: flex; align-items: center; gap: var(--space-2); }
+.crumb li + li::before { content: "\203A"; color: var(--text-secondary); }
+.crumb a { color: var(--accent); }
+.crumb [aria-current="page"] { color: var(--text-primary); font-weight: 600; }
+.crumb__ctx { color: var(--text-secondary); }
+
+/* --- Shared data table consistency --- */
+.table-wrap { max-width: 100%; position: relative; }
+.table-wrap table { min-width: 100%; }
+caption { caption-side: top; text-align: left; color: var(--text-secondary); font-size: var(--text-caption); padding-bottom: var(--space-2); }
+.data-row-count { font-size: var(--text-caption); color: var(--text-secondary); margin-top: var(--space-2); }
+[aria-busy="true"] .table-wrap { opacity: 0.65; }
+
+/* --- Pagination label/total consistency --- */
+.pagination__total { font-weight: 600; color: var(--text-primary); }
+
+/* --- Shared form control consistency --- */
+.filter select, .filter input, .filter label, .filter span { min-width: 148px; }
+.filter input[type="search"], .filter input[type="text"] { min-width: 180px; }
+
+/* --- Consistent card/footer spacing --- */
+.card + .card { margin-top: var(--space-4); }
+.card__foot { border-top: 1px solid var(--border); padding-top: var(--space-3); }
+
+/* --- KPI/metric cards and their flex-column children shrink below max-content
+      (prevents long sub-captions forcing horizontal overflow at small widths) --- */
+.kpi, .metric { min-width: 0; }
+.kpi > *, .metric > * { min-width: 0; }
+.kpi__sub, .metric__label { display: block; width: 100%; overflow-wrap: anywhere; }
+
+/* --- Risk-matrix cells shrink below label min-content (constrains 1fr tracks) --- */
+.matrix__cell, .matrix__header > span, .matrix__row > span:first-child { min-width: 0; overflow-wrap: anywhere; }
+.matrix { overflow-x: clip; }
+/* Overflow-guard: KPI/metric/grid containers clip horizontally at every
+   viewport width so an item's min-content (e.g. a long sub-caption) cannot
+   force page-level horizontal overflow. Wide data tables scroll inside their
+   own .table-wrap instead. */
+.kpi-row, .exec-kpis, .grid-kpi { overflow-x: clip; }
+
+/* --- Back-affordance for drill-down detail panels --- */
+.detail-back { display: inline-flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3); }
+.detail-back button { background: transparent; color: var(--accent); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: var(--space-1) var(--space-3); font-size: var(--text-data); cursor: pointer; }
+.detail-back button:hover { background: rgba(25,230,177,0.08); text-decoration: none; }
+
+/* ============================================================
+   Phase 6 — Step 7 : Responsive viewports
+   ============================================================ */
+@media (max-width: 1024px) {
+  .exec-kpis { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+  .kpi-row { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+}
+
+@media (max-width: 760px) {
+  /* nav: horizontal scroll keeps all six links usable without wrapping */
+  .app-nav { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; }
+  .app-nav .nav-link { white-space: nowrap; }
+  .app-header { flex-direction: column; align-items: stretch; gap: var(--space-3); overflow-x: clip; }
+  .brand { align-items: flex-start; }
+  .filter-bar { padding: var(--space-3); }
+  .filter { width: 100%; }
+  .filter select, .filter input, .filter label, .filter span { width: 100%; min-width: 0; }
+  .filter__hint { align-self: flex-start; }
+  .btn { width: 100%; text-align: center; }
+  .scen-row { grid-template-columns: 1fr; gap: var(--space-2); text-align: left; }
+  .scen-row__stat { text-align: left; }
+  .dl { grid-template-columns: 1fr; gap: var(--space-1); }
+  .tierlist { grid-template-columns: repeat(2, 1fr); }
+  .evidence { grid-template-columns: 1fr 1fr; }
+  .contribution .ent { flex-basis: 46%; }
+  .kpi-row, .exec-kpis { grid-template-columns: repeat(auto-fit, minmax(min(100%, 130px), 1fr)); }
+  /* growth-direction chips must shrink/wrap rather than force page overflow */
+  .chiplist .chip { white-space: normal; max-width: 100%; min-width: 0; overflow-wrap: anywhere; }
+}
+
+@media (max-width: 480px) {
+  .grid-kpi { grid-template-columns: 1fr; }
+  .tierlist { grid-template-columns: 1fr; }
+  .evidence { grid-template-columns: 1fr; }
+  .app-main { padding: var(--space-3); }
+  .kpi__value { font-size: 1.3rem; }
+}

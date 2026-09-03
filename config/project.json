@@ -1,0 +1,41 @@
+{
+  "project": "Supply Chain & Demand Intelligence Platform",
+  "phase": 2,
+  "paths": {
+    "raw": "data/raw",
+    "processed": "data/processed",
+    "curated": "data/curated",
+    "external": "data/external",
+    "reports": "reports",
+    "figures": "reports/figures",
+    "diagnostics": "reports/figures/diagnostics",
+    "manifest": "MANIFEST.json"
+  },
+  "database": {
+    "name": "supply_chain_intelligence",
+    "schema": "public",
+    "host": "127.0.0.1",
+    "port": 5432,
+    "user": "postgres",
+    "password": "$PGPASSWORD or NONE (trust auth)"
+  },
+  "m5": {
+    "competition": "m5-forecasting-accuracy",
+    "core_files": [
+      "calendar.csv",
+      "sell_prices.csv",
+      "sales_train_validation.csv",
+      "sales_train_evaluation.csv"
+    ],
+    "all_files": [
+      "calendar.csv",
+      "sell_prices.csv",
+      "sales_train_validation.csv",
+      "sales_train_evaluation.csv",
+      "sample_submission.csv"
+    ],
+    "first_sales_col": "d_1",
+    "last_sales_col_validation": "d_1913",
+    "last_sales_col_evaluation": "d_1941"
+  }
+}
